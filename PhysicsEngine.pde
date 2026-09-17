@@ -13,6 +13,10 @@ void setup() {
   println("Produit par composantes : " + a.componentMultiply(b));
   println("Produit scalaire : " + a.dot(b));
   println("Produit vectoriel : " + a.cross(b));
+  
+  
+  TestVector3D tests = new TestVector3D();
+  tests.runTests();
 }
 
 void draw() {
