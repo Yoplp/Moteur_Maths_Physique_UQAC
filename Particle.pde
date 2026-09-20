@@ -5,12 +5,16 @@ class Particle{
   Vector3D pos;
   float damping;                 //damping pour simuler les frottements
   float inverseMasse;
+  color couleur;
+  float rayon;
   
-  Particle(Vector3D acceleration, Vector3D velocite, Vector3D pos, float damping, float masse){    //constructeur
+  Particle(Vector3D acceleration, Vector3D velocite, Vector3D pos, float damping, float masse, color couleur, float rayon){    //constructeur
     this.acceleration = acceleration;
     this.velocite = velocite;
     this.pos = pos;
     this.damping = damping;
+    this.couleur = couleur;
+    this.rayon = rayon;
     
     if (masse <= 0){                                   //calcul de inversemasse en fonction de la masse 
       inverseMasse = 0.0f;
