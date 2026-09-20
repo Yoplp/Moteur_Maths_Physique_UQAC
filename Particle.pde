@@ -12,8 +12,8 @@ class Particle{
     this.pos = pos;
     this.damping = damping;
     
-    if (masse == 0){                                   //calcul de inversemasse en fonction de la masse 
-      inverseMasse = Float.POSITIVE_INFINITY;
+    if (masse <= 0){                                   //calcul de inversemasse en fonction de la masse 
+      inverseMasse = 0.0f;
     }
     else{
       inverseMasse = 1/masse;
