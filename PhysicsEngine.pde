@@ -35,6 +35,7 @@ void setup() {
 
 void draw() {
     background(0);
+    dessinerScene();
     
     int tempsActuel = millis();
     deltaTime = (tempsActuel - dernierTemps) / 1000.0; // en secondes
@@ -45,9 +46,9 @@ void draw() {
     for (Particle p : particules) {
       p.integrer(deltaTime);
       Vector3D pos = p.get_pos();
-      fill(255);
+      fill(p.couleur);
       noStroke();
-      ellipse(pos.x, pos.y, 10, 10);
+      ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
     }
 
     // Interface texte
@@ -65,26 +66,37 @@ Particle creerProjectile(int type, Vector3D positionDepart, Vector3D direction) 
   float vitesseInitiale;
   float masse;
   float damping = 0.999; // frottement négligeable
+  color couleur;
+  float rayon;
 
   if (type == 0) { // Balle
     vitesseInitiale = 400;
     masse = 0.1;
+    couleur = color(255, 255, 0);
+    rayon = 6;
+    
   } else if (type == 1) { // Boulet
     vitesseInitiale = 250;
     masse = 5.0;
+    couleur = color(150, 150, 150);
+    rayon = 16;
   } else if (type == 2) { // Laser
     vitesseInitiale = 800;
     masse = 0.01;
     damping = 1.0; 
+    couleur = color(255, 0, 0);
+    rayon = 4;
   } else { // Boule de feu
     vitesseInitiale = 150;
     masse = 2.0;
+    couleur = color(255, 100, 0);
+    rayon = 12;
   }
 
   Vector3D velocite = direction.normalized().multiply(vitesseInitiale);
   Vector3D acceleration = new Vector3D(0, 200, 0);
   
-  return new Particle(acceleration, velocite, positionDepart, damping, masse);
+  return new Particle(acceleration, velocite, positionDepart, damping, masse, couleur, rayon);
 }
 
 
@@ -103,4 +115,12 @@ void mousePressed() {
   Vector3D direction = cible.subtract(depart);
   particules.add(creerProjectile(projectileSelectionne, depart, direction));
   
+}
+
+
+void dessinerScene() {
+  // Sol
+  stroke(100);
+  strokeWeight(4);
+  line(0, height - 30, width, height - 30);
 }
