@@ -38,6 +38,18 @@ void draw() {
       fill(p.couleur);
       noStroke();
       ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
+      
+      if (p.pos.y>=600){
+        p.pos = new Vecteur3D(p.pos.x, 600, p.pos.z);
+        p.velocite = new Vecteur3D(p.velocite.x, p.velocite.y * (-0.85), p.velocite.z);
+      }
+      
+      if (p.pos.x<=10){
+        p.velocite = new Vecteur3D(p.velocite.x * (-1), p.velocite.y , p.velocite.z);
+      }
+
+      //text("Position : "+ int(pos.x)+ "...." + int(pos.y), pos.x, pos.y);                  //Affichage position de la balle
+      
     }
 
     // Interface texte
