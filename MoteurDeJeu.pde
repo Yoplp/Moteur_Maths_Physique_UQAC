@@ -41,11 +41,10 @@ void draw() {
   for (int i = projectiles.size() - 1; i >= 0; i--) {
     Projectile p = projectiles.get(i);
     p.integrer(deltaTime);
+    p.enregistrerPosition();
 
-    Vecteur3D pos = p.pos;
-    fill(p.couleur);
-    noStroke();
-    ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
+    p.dessinerTrajectoire();
+    p.dessiner();
 
     if (p.pos.y>=600) {
       p.pos = new Vecteur3D(p.pos.x, 600, p.pos.z);
@@ -71,7 +70,7 @@ void draw() {
       }
     }
     // Destruction si la balle sort complètement de l'écran
-    else if (pos.y > height || pos.x > width || pos.x < 0) {
+    else if (p.pos.y > height || p.pos.x > width || p.pos.x < 0) {
       projectiles.remove(i);
     }
   }
