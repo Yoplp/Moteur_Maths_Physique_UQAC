@@ -43,10 +43,10 @@ void draw() {
       Particule p = particules.get(i);
       p.integrer(deltaTime);
       
-      Vecteur3D pos = p.getPos();
-      fill(p.getCouleur());
+      Vecteur3D pos = p.pos;
+      fill(p.couleur);
       noStroke();
-      ellipse(pos.x, pos.y, p.getRayon() * 2, p.getRayon() * 2);
+      ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
       
       if (p.pos.y>=600){
         p.pos = new Vecteur3D(p.pos.x, 600, p.pos.z);

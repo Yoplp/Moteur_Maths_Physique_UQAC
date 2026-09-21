@@ -40,6 +40,6 @@ class Cible {
     // si distance est plus petite que le rayon, il y a collision
     boolean collisionPhysique = distance < pRayon;
     
-    return (collisionPhysique && p.getCouleur() == couleurAttendue);
+    return (collisionPhysique && p.couleur == couleurAttendue);
   }
 }
