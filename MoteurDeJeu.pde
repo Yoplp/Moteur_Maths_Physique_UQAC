@@ -23,10 +23,10 @@ void setup() {
     return;   
   }
   
+
   cibleActuelle = new Cible();
   dernierTemps = millis();
-  
-  
+
 }
 
 void draw() {
@@ -37,8 +37,8 @@ void draw() {
     deltaTime = (tempsActuel - dernierTemps) / 1000.0; // en secondes
     dernierTemps = tempsActuel;
     
-    
-    // Update de la Physique
+
+    // Mise à jour de la Physique
     for (int i = particules.size() - 1; i >= 0; i--) {
       Particule p = particules.get(i);
       p.integrer(deltaTime);
@@ -48,6 +48,18 @@ void draw() {
       noStroke();
       ellipse(pos.x, pos.y, p.getRayon() * 2, p.getRayon() * 2);
       
+      if (p.pos.y>=600){
+        p.pos = new Vecteur3D(p.pos.x, 600, p.pos.z);
+        p.velocite = new Vecteur3D(p.velocite.x, p.velocite.y * (-0.85), p.velocite.z);
+      }
+      
+      if (p.pos.x<=10){
+        p.velocite = new Vecteur3D(p.velocite.x * (-1), p.velocite.y , p.velocite.z);
+      }
+
+      //text("Position : "+ int(pos.x)+ "...." + int(pos.y), pos.x, pos.y);       //Affichage position de la balle
+
+
       // Gestion de la collision
       if (!jeuTermine && cibleActuelle.estTouchee(p)) {
         particules.remove(i); 
@@ -63,6 +75,7 @@ void draw() {
       else if (pos.y > height || pos.x > width || pos.x < 0) {
         particules.remove(i);
       }
+
     }
 
     // Affichage de la cible

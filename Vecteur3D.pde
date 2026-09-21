@@ -1,7 +1,7 @@
 class Vecteur3D {
-  final float x;
-  final float y;
-  final float z;
+  float x;
+  float y;
+  float z;
 
   Vecteur3D(float x, float y, float z) {
     this.x = x;
@@ -9,6 +9,7 @@ class Vecteur3D {
     this.z = z;
   }
 
+  // FONCTIONS
   // Norme au carré : x² + y² + z²
   float normeCarre() {
     return x * x + y * y + z * z;
