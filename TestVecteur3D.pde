@@ -1,8 +1,10 @@
 class TestVecteur3D {
   // Tolérance pour la comparaison de nombres à virgule flottante
   final float EPSILON = 0.0001f;
-
-  void runTests() {
+  boolean tousLesTestsReussis = true;
+  
+  boolean runTests() {
+    tousLesTestsReussis = true;
     println("---- DEBUT TESTS UNITAIRES Vecteur3D ----");
     testNormeCarre();
     testNormeEuclidienne();
@@ -14,6 +16,8 @@ class TestVecteur3D {
     testScalaire();
     testProduitVectoriel();
     println("---- FIN TESTS UNITAIRES Vecteur3D ----");
+    
+    return tousLesTestsReussis;
   }
 
   void testNormeCarre() {
@@ -84,6 +88,7 @@ class TestVecteur3D {
       println("[SUCCÈS] " + nomTest);
     } else {
       println("[ÉCHEC] " + nomTest + " | Attendu: " + attendu + ", Obtenu: " + actuel);
+      tousLesTestsReussis = false;
     }
   }
 
@@ -94,6 +99,7 @@ class TestVecteur3D {
       println("[SUCCÈS] " + nomTest);
     } else {
       println("[ÉCHEC] " + nomTest + " | Attendu: " + attendu + ", Obtenu: " + actuel);
+      tousLesTestsReussis = false;
     }
   }
 }
