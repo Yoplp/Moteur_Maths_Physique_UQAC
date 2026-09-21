@@ -45,7 +45,7 @@ void draw() {
     // Update de la Physique
     for (Particule p : particules) {
       p.integrer(deltaTime);
-      Vecteur3D pos = p.get_pos();
+      Vecteur3D pos = p.getPos();
       fill(p.couleur);
       noStroke();
       ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
@@ -95,7 +95,7 @@ Particule creerProjectile(int type, Vecteur3D positionDepart, Vecteur3D directio
   Vecteur3D velocite = direction.normaliser().multiplier(vitesseInitiale);
   Vecteur3D acceleration = new Vecteur3D(0, 200, 0);
   
-  return new Particule(acceleration, velocite, positionDepart, damping, masse, couleur, rayon);
+  return new Particule(acceleration, velocite, positionDepart, damping, masse, rayon, couleur);
 }
 
 
