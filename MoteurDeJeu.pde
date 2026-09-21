@@ -1,4 +1,4 @@
-ArrayList<Particle> particules = new ArrayList<Particle>();
+ArrayList<Particule> particules = new ArrayList<Particule>();
 
 int projectileSelectionne = 0; 
 String[] nomsProjectiles = {"Balle", "Boulet", "Laser", "Boule de feu"};
@@ -8,24 +8,24 @@ int dernierTemps;
 float deltaTime;
 
 void setup() {
-  size(640, 640);
+  size(1280, 640);
 
   
-  Vector3D a = new Vector3D(1, 2, 3);
-  Vector3D b = new Vector3D(4, 5, 6);
+  Vecteur3D a = new Vecteur3D(1, 2, 3);
+  Vecteur3D b = new Vecteur3D(4, 5, 6);
 
-  println("Norme de a : " + a.magnitude());
-  println("Norme carrée de a : " + a.magnitudeSquared());
-  println("Normalisation : " + a.normalized());
-  println("Multiplication : " + a.multiply(2));
-  println("Addition : " + a.add(b));
-  println("Soustraction : " + a.subtract(b));
-  println("Produit par composantes : " + a.componentMultiply(b));
-  println("Produit scalaire : " + a.dot(b));
-  println("Produit vectoriel : " + a.cross(b));
+  println("Norme de a : " + a.normeEuclidienne());
+  println("Norme carrée de a : " + a.normeCarre());
+  println("Normalisation : " + a.normaliser());
+  println("Multiplication : " + a.multiplier(2));
+  println("Addition : " + a.ajouter(b));
+  println("Soustraction : " + a.soustraire(b));
+  println("Produit par composantes : " + a.produitParComposante(b));
+  println("Produit scalaire : " + a.scalaire(b));
+  println("Produit vectoriel : " + a.produitVectoriel(b));
   
   
-  TestVector3D tests = new TestVector3D();
+  TestVecteur3D tests = new TestVecteur3D();
   tests.runTests();
   
   dernierTemps = millis();
@@ -43,9 +43,9 @@ void draw() {
     
     
     // Update de la Physique
-    for (Particle p : particules) {
+    for (Particule p : particules) {
       p.integrer(deltaTime);
-      Vector3D pos = p.get_pos();
+      Vecteur3D pos = p.get_pos();
       fill(p.couleur);
       noStroke();
       ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
@@ -62,7 +62,7 @@ void draw() {
     
 }
 
-Particle creerProjectile(int type, Vector3D positionDepart, Vector3D direction) {
+Particule creerProjectile(int type, Vecteur3D positionDepart, Vecteur3D direction) {
   float vitesseInitiale;
   float masse;
   float damping = 0.999; // frottement négligeable
@@ -74,7 +74,6 @@ Particle creerProjectile(int type, Vector3D positionDepart, Vector3D direction) 
     masse = 0.1;
     couleur = color(255, 255, 0);
     rayon = 6;
-    
   } else if (type == 1) { // Boulet
     vitesseInitiale = 250;
     masse = 5.0;
@@ -93,10 +92,10 @@ Particle creerProjectile(int type, Vector3D positionDepart, Vector3D direction) 
     rayon = 12;
   }
 
-  Vector3D velocite = direction.normalized().multiply(vitesseInitiale);
-  Vector3D acceleration = new Vector3D(0, 200, 0);
+  Vecteur3D velocite = direction.normaliser().multiplier(vitesseInitiale);
+  Vecteur3D acceleration = new Vecteur3D(0, 200, 0);
   
-  return new Particle(acceleration, velocite, positionDepart, damping, masse, couleur, rayon);
+  return new Particule(acceleration, velocite, positionDepart, damping, masse, couleur, rayon);
 }
 
 
@@ -110,9 +109,9 @@ void keyPressed() {
 
 
 void mousePressed() {
-  Vector3D depart = new Vector3D(50, height - 50, 0);
-  Vector3D cible = new Vector3D(mouseX, mouseY, 0);
-  Vector3D direction = cible.subtract(depart);
+  Vecteur3D depart = new Vecteur3D(50, height - 50, 0);
+  Vecteur3D cible = new Vecteur3D(mouseX, mouseY, 0);
+  Vecteur3D direction = cible.soustraire(depart);
   particules.add(creerProjectile(projectileSelectionne, depart, direction));
   
 }

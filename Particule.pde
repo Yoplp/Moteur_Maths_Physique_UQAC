@@ -1,14 +1,14 @@
-class Particle{
+class Particule{
   
-  Vector3D acceleration;     //acceleration, velocité et position de la particule
-  Vector3D velocite;
-  Vector3D pos;
+  Vecteur3D acceleration;     //acceleration, velocité et position de la particule
+  Vecteur3D velocite;
+  Vecteur3D pos;
   float damping;                 //damping pour simuler les frottements
   float inverseMasse;
   color couleur;
   float rayon;
   
-  Particle(Vector3D acceleration, Vector3D velocite, Vector3D pos, float damping, float masse, color couleur, float rayon){    //constructeur
+  Particule(Vecteur3D acceleration, Vecteur3D velocite, Vecteur3D pos, float damping, float masse, color couleur, float rayon){    //constructeur
     this.acceleration = acceleration;
     this.velocite = velocite;
     this.pos = pos;
@@ -25,15 +25,15 @@ class Particle{
       
   }
   
-  void set_acceleration(Vector3D new_acceleration){  //setters 
+  void set_acceleration(Vecteur3D new_acceleration){  //setters 
     acceleration = new_acceleration;
   }
   
-  void set_pos(Vector3D new_pos){
+  void set_pos(Vecteur3D new_pos){
     pos = new_pos;
   }
   
-  void set_velocite(Vector3D new_velocite){
+  void set_velocite(Vecteur3D new_velocite){
     velocite = new_velocite;
   }
   
@@ -54,15 +54,15 @@ class Particle{
       inverseMasse = new_inverseMasse;
   }
   
-  Vector3D get_acceleration(){        //getters 
+  Vecteur3D get_acceleration(){        //getters 
     return acceleration;
   }
   
-  Vector3D get_pos(){
+  Vecteur3D get_pos(){
     return pos;
   }
   
-  Vector3D get_velocite(){
+  Vecteur3D get_velocite(){
     return velocite;
   }
   
@@ -80,11 +80,11 @@ class Particle{
     }
     
     
-    Vector3D new_velocity;
-    Vector3D new_position;
+    Vecteur3D new_velocity;
+    Vecteur3D new_position;
     
-    new_velocity = (get_velocite().multiply(get_damping())).add(get_acceleration().multiply(temps));
-    new_position = get_pos().add(new_velocity.multiply(temps));
+    new_velocity = (get_velocite().multiplier(get_damping())).ajouter(get_acceleration().multiplier(temps));
+    new_position = get_pos().ajouter(new_velocity.multiplier(temps));
     
     set_velocite(new_velocity);                          //on remplace la vitesse et la position de la particule par nos calculs 
     set_pos(new_position);
