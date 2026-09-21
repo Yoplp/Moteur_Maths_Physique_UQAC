@@ -26,7 +26,13 @@ void setup() {
   
   
   TestVecteur3D tests = new TestVecteur3D();
-  tests.runTests();
+  boolean reussite = tests.runTests(); 
+  
+  if (!reussite) {
+    println("ERREUR : Un ou plusieurs tests ont échoué. Arrêt du moteur.");
+    exit(); 
+    return;   
+  }
   
   dernierTemps = millis();
   
