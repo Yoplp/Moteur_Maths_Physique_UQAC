@@ -27,7 +27,8 @@ class Particule{
     Vecteur3D nouvelleVelocity;
     Vecteur3D nouvellePosition;
     
-    nouvelleVelocity = (velocite.multiplier(frottements)).ajouter(acceleration.multiplier(temps));
+    float amortissement = pow(frottements, temps);
+    nouvelleVelocity = (velocite.multiplier(amortissement)).ajouter(acceleration.multiplier(temps));
     nouvellePosition = pos.ajouter(nouvelleVelocity.multiplier(temps));
     
     // On remplace la vitesse et la position de la particule par nos calculs
