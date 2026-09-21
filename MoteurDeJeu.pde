@@ -10,21 +10,6 @@ float deltaTime;
 void setup() {
   size(1280, 640);
 
-  
-  Vecteur3D a = new Vecteur3D(1, 2, 3);
-  Vecteur3D b = new Vecteur3D(4, 5, 6);
-
-  println("Norme de a : " + a.normeEuclidienne());
-  println("Norme carrée de a : " + a.normeCarre());
-  println("Normalisation : " + a.normaliser());
-  println("Multiplication : " + a.multiplier(2));
-  println("Addition : " + a.ajouter(b));
-  println("Soustraction : " + a.soustraire(b));
-  println("Produit par composantes : " + a.produitParComposante(b));
-  println("Produit scalaire : " + a.scalaire(b));
-  println("Produit vectoriel : " + a.produitVectoriel(b));
-  
-  
   TestVecteur3D tests = new TestVecteur3D();
   boolean reussite = tests.runTests(); 
   
@@ -34,9 +19,7 @@ void setup() {
     return;   
   }
   
-  dernierTemps = millis();
-  
-  
+  dernierTemps = millis();  
 }
 
 void draw() {
@@ -48,10 +31,10 @@ void draw() {
     dernierTemps = tempsActuel;
     
     
-    // Update de la Physique
+    // Mise à jour de la Physique
     for (Particule p : particules) {
       p.integrer(deltaTime);
-      Vecteur3D pos = p.getPos();
+      Vecteur3D pos = p.pos;
       fill(p.couleur);
       noStroke();
       ellipse(pos.x, pos.y, p.rayon * 2, p.rayon * 2);
