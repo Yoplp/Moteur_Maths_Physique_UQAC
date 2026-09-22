@@ -4,8 +4,8 @@ class Projectile extends Particule {
   color couleur;
   ArrayList<Vecteur3D> historique;
 
-  Projectile(TypeProjectile type, Vecteur3D positionDeDepart, Vecteur3D direction) {
-    super(new Vecteur3D(0, 200, 0), direction.normaliser().multiplier(type.vitesse), positionDeDepart, type.frottements, type.masse);
+  Projectile(TypeProjectile type, Vecteur3D positionDeDepart, Vecteur3D direction, float vitesseInitial) {
+    super(new Vecteur3D(0, 200, 0), direction.normaliser().multiplier(vitesseInitial), positionDeDepart, type.frottements, type.masse);
     this.type = type;
     this.rayon = type.rayon;
     this.couleur = color(type.rouge, type.vert, type.bleu);

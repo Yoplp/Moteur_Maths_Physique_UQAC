@@ -23,9 +23,9 @@ enum TypeProjectile {
   LASER(
     4,
     255, 0, 0,
-    800,
+    2000,
     1.0f,
-    0.01f
+    0.0001f
   );
 
   final float rayon;
