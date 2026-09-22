@@ -14,6 +14,9 @@ class Projectile extends Particule {
   
   void enregistrerPosition() {
     historique.add(new Vecteur3D(pos.x, pos.y, pos.z));
+    if (historique.size() > 100) { // Plafond
+      historique.remove(0);
+    }
   }
   
   void dessinerTrajectoire() {
@@ -27,6 +30,16 @@ class Projectile extends Particule {
       }
       vertex(pos.x, pos.y);
     endShape();
+  }
+  
+  void dessinerVecteurVitesse() {
+    float facteurEchelle = 0.08;
+    float finX = pos.x + velocite.x * facteurEchelle;
+    float finY = pos.y + velocite.y * facteurEchelle;
+
+    stroke(0, 255, 255, 200); // Ligne cyan
+    strokeWeight(1.5);
+    line(pos.x, pos.y, finX, finY);
   }
   
   void dessiner() {
