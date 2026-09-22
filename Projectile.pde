@@ -22,11 +22,10 @@ class Projectile extends Particule {
     strokeWeight(2);
     
     beginShape();
-    for (Vecteur3D pt : historique) {
-      vertex(pt.x, pt.y);
-    }
-
-    vertex(pos.x, pos.y);
+      for (Vecteur3D pt : historique) {
+        vertex(pt.x, pt.y);
+      }
+      vertex(pos.x, pos.y);
     endShape();
   }
   
