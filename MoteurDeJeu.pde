@@ -98,14 +98,14 @@ void draw() {
     text("Frame time : " + nf(deltaTime * 1000, 0, 2) + " ms", 10, 60);
     text("Puissance du tir (Flèches Haut/Bas pour modifier) : " + int(puissanceTir), 10, 80);
     
-    // NOUVEAU : Dessin de la barre de puissance (jauge de 200 pixels de large)
+    // Dessin de la barre de puissance 
     fill(100); // Fond de la jauge gris
     rect(10, 90, 200, 15);
     fill(255, 200, 0); // Jauge orange/jaune
     float largeurJauge = map(puissanceTir, 50, 600, 0, 200); // map() convertit la puissance (50-600) en pixels (0-200)
     rect(10, 90, largeurJauge, 15);
     
-    // Score
+    // Score et munitions
     textSize(20);
     text("Score : " + score + " / 10", width - 150, 30);
     text("Munitions : " + munitions + " / 30", width - 165, 60);
