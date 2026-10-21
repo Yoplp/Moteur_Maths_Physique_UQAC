@@ -4,13 +4,15 @@ class Particule{
   Vecteur3D pos;
   float frottements;
   float masse;
+  float rayon;
   
-  Particule(Vecteur3D acceleration, Vecteur3D velocite, Vecteur3D pos, float frottements, float masse){
+  Particule(Vecteur3D acceleration, Vecteur3D velocite, Vecteur3D pos, float frottements, float masse, float rayon){
     this.acceleration = acceleration;
     this.velocite = velocite;
     this.pos = pos;
     this.frottements = frottements;
     this.masse = masse;
+    this.rayon = rayon;
   }
   
   // FONCTIONS
