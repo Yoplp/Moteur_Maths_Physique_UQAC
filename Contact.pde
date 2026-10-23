@@ -1,3 +1,6 @@
+// Contact entre deux particules p1 et p2.
+// p2 peut valoir null : c'est alors un contact avec le décor (masse infinie, vitesse nulle).
+// La normale est orientée de p1 vers p2 (ou de p1 vers le décor).
 class Contact {
   Particule p1;
   Particule p2;
@@ -18,12 +21,27 @@ class Contact {
     resoudreImpulsion();
   }
 
+  // Inverse de la masse de p2 (0 pour le décor = masse infinie)
+  float inverseMasse2() {
+    return (p2 == null) ? 0.0f : p2.getInverseMasse();
+  }
+
+  // Vitesse de p2 (nulle pour le décor)
+  Vecteur3D velocite2() {
+    return (p2 == null) ? new Vecteur3D(0, 0, 0) : p2.velocite;
+  }
+
 
   // Page 6 du cours
   void resoudreInterpenetration() {
     float invMasse1 = p1.getInverseMasse();
-    float invMasse2 = p2.getInverseMasse();
+    float invMasse2 = inverseMasse2();
     float sommeInvMasses = invMasse1 + invMasse2;
+
+    // Deux objets immobiles : rien à déplacer
+    if (sommeInvMasses <= 0.0f) {
+      return;
+    }
 
     // d*(1/ma + 1/mb)*n
     Vecteur3D deplacementMasseInv = normale.multiplier(penetration / sommeInvMasses);
@@ -45,11 +63,22 @@ class Contact {
   // Page 4 du cours
   void resoudreImpulsion() {
     float invMasse1 = p1.getInverseMasse();
-    float invMasse2 = p2.getInverseMasse();
+    float invMasse2 = inverseMasse2();
     float sommeInvMasses = invMasse1 + invMasse2;
 
-    Vecteur3D vRel = p1.velocite.soustraire(p2.velocite);
+    if (sommeInvMasses <= 0.0f) {
+      return;
+    }
+
+    Vecteur3D vRel = p1.velocite.soustraire(velocite2());
     float vRelNormale = vRel.scalaire(normale);
+
+    // Si les particules s'éloignent déjà l'une de l'autre, il n'y a pas d'impulsion à appliquer
+    // (sinon l'impulsion les rapprocherait).
+    if (vRelNormale <= 0.0f) {
+      return;
+    }
+
     float k = ((restitution + 1.0f) * vRelNormale) / sommeInvMasses;
     Vecteur3D impulsion = normale.multiplier(k);
 
@@ -57,6 +86,8 @@ class Contact {
     p1.velocite = p1.velocite.soustraire(impulsion.multiplier(invMasse1));
 
     // v2 + (k*n)/m2
-    p2.velocite = p2.velocite.ajouter(impulsion.multiplier(invMasse2));
+    if (p2 != null) {
+      p2.velocite = p2.velocite.ajouter(impulsion.multiplier(invMasse2));
+    }
   }
 }

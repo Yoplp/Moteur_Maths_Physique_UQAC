@@ -26,9 +26,15 @@ class Particule{
     forceAccumulee = forceAccumulee.ajouter(force);
   }
 
+  // Remet l'accumulateur de forces à zéro à chaque frame
+  void viderForces() {
+    forceAccumulee = new Vecteur3D(0, 0, 0);
+  }
+
   // Integrateur pour calculer la nouvelle position et la nouvelle vitesse de la particule
-  void integrer(float temps){          
+  void integrer(float temps){
     if (this.getInverseMasse() <= 0.0f) {
+      viderForces();
       return;
     }
     
@@ -42,7 +48,10 @@ class Particule{
     nouvellePosition = pos.ajouter(nouvelleVelocity.multiplier(temps));
     
     // On remplace la vitesse et la position de la particule par nos calculs
-    this.velocite = nouvelleVelocity; 
+    this.velocite = nouvelleVelocity;
     this.pos = nouvellePosition;
+
+    // Les forces ont été consommées par ce pas de temps
+    viderForces();
   }
 }
