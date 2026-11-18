@@ -23,8 +23,8 @@ class Quaternion {
   }
 
   // Rotation d'un angle (radians) autour d'un axe (pas nécessairement unitaire). 
-  Quaternion setAxeAngle(PVector axe, float angle) {
-    float longueur = axe.mag();
+  Quaternion setAxeAngle(Vecteur3D axe, float angle) {
+    float longueur = axe.normeEuclidienne();
     if (longueur < 1e-8f) return setIdentite();
     float demi = angle / 2;
     float s = sin(demi) / longueur;
@@ -51,8 +51,8 @@ class Quaternion {
     return normaliser();
   }
 
-  PVector vecteur() {
-    return new PVector(x, y, z);
+  Vecteur3D vecteur() {
+    return new Vecteur3D(x, y, z);
   }
 
   float normeCarree() {
@@ -78,10 +78,10 @@ class Quaternion {
   }
 
   // Axe de rotation unitaire (arbitraire si la rotation est nulle)
-  PVector axe() {
+  Vecteur3D axe() {
     float s = sqrt(max(0, 1 - w * w));
-    if (s < 1e-6f) return new PVector(1, 0, 0);
-    return new PVector(x / s, y / s, z / s);
+    if (s < 1e-6f) return new Vecteur3D(1, 0, 0);
+    return new Vecteur3D(x / s, y / s, z / s);
   }
 
   // ---------- Opérations ----------
@@ -129,13 +129,11 @@ class Quaternion {
   }
 
   // Fait pivoter un vecteur : p' = q p q* (this doit être unitaire)
-  PVector pivoter(PVector p) {
-    PVector v = vecteur();
-    PVector t = v.cross(p).mult(2);          // t = 2 (v x p)
-    PVector r = p.copy();
-    r.add(PVector.mult(t, w));               // + w t
-    r.add(v.cross(t));                       // + v x t
-    return r;
+  Vecteur3D pivoter(Vecteur3D p) {
+    Vecteur3D v = vecteur();
+    Vecteur3D t = v.produitVectoriel(p).multiplier(2);   // t = 2 (v x p)
+    return p.ajouter(t.multiplier(w))                    // p + w t
+            .ajouter(v.produitVectoriel(t));             //   + v x t
   }
 
   // Déplacement angulaire d tel que this * d = q2, soit d = this^-1 * q2
@@ -168,7 +166,7 @@ class Quaternion {
    *     q(t+dt) = q(t) + 1/2 * [0, omega] * q(t) * dt     puis normalisation.
    * Modifie this.
    */
-  Quaternion integrer(PVector omega, float dt) {
+  Quaternion integrer(Vecteur3D omega, float dt) {
     Quaternion w_q = new Quaternion(0, omega.x, omega.y, omega.z);
     Quaternion dq = w_q.mult(this).mult(0.5f * dt);
     w += dq.w; x += dq.x; y += dq.y; z += dq.z;
@@ -181,7 +179,7 @@ class Quaternion {
     return R.setOrientation(this);
   }
 
-  Matrix4 toMatrix4(PVector position) {
+  Matrix4 toMatrix4(Vecteur3D position) {
     Matrix4 M = new Matrix4();
     return M.setOrientationEtPosition(this, position);
   }

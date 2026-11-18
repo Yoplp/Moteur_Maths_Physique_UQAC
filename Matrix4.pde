@@ -15,7 +15,7 @@ class Matrix4 {
   }
 
   /** Transformation corps rigide : rotation q suivie de la translation pos (objet -> monde). */
-  Matrix4 setOrientationEtPosition(Quaternion q, PVector pos) {
+  Matrix4 setOrientationEtPosition(Quaternion q, Vecteur3D pos) {
     setMatrix3(q.toMatrix3());
     return setTranslation(pos);
   }
@@ -27,12 +27,12 @@ class Matrix4 {
     return this;
   }
 
-  Matrix4 setTranslation(PVector t) {
+  Matrix4 setTranslation(Vecteur3D t) {
     m[3] = t.x; m[7] = t.y; m[11] = t.z;
     return this;
   }
 
-  Matrix4 setEchelle(PVector s) {
+  Matrix4 setEchelle(Vecteur3D s) {
     setIdentite();
     m[0] = s.x; m[5] = s.y; m[10] = s.z;
     return this;
@@ -45,13 +45,13 @@ class Matrix4 {
                        m[8], m[9], m[10]);
   }
 
-  PVector getTranslation() {
-    return new PVector(m[3], m[7], m[11]);
+  Vecteur3D getTranslation() {
+    return new Vecteur3D(m[3], m[7], m[11]);
   }
 
   /** i-ème colonne de la partie linéaire (0, 1, 2 : axes de l'objet dans le repère monde). */
-  PVector getAxe(int i) {
-    return new PVector(m[i], m[4 + i], m[8 + i]);
+  Vecteur3D getAxe(int i) {
+    return new Vecteur3D(m[i], m[4 + i], m[8 + i]);
   }
 
 
@@ -69,8 +69,8 @@ class Matrix4 {
   }
 
   // Transforme un POINT (position) : R p + t. 
-  PVector mult(PVector p) {
-    return new PVector(
+  Vecteur3D mult(Vecteur3D p) {
+    return new Vecteur3D(
       m[0] * p.x + m[1] * p.y + m[2] * p.z + m[3],
       m[4] * p.x + m[5] * p.y + m[6] * p.z + m[7],
       m[8] * p.x + m[9] * p.y + m[10] * p.z + m[11]
@@ -78,8 +78,8 @@ class Matrix4 {
   }
 
   // Transforme une DIRECTION : R d (la translation est ignorée, i.e. composante homogène w = 0). 
-  PVector multDirection(PVector d) {
-    return new PVector(
+  Vecteur3D multDirection(Vecteur3D d) {
+    return new Vecteur3D(
       m[0] * d.x + m[1] * d.y + m[2] * d.z,
       m[4] * d.x + m[5] * d.y + m[6] * d.z,
       m[8] * d.x + m[9] * d.y + m[10] * d.z
@@ -95,20 +95,20 @@ class Matrix4 {
     Matrix3 Rinv = getMatrix3().inverse();     
     Matrix4 r = new Matrix4();
     r.setMatrix3(Rinv);
-    PVector t = Rinv.mult(getTranslation());
-    return r.setTranslation(t.mult(-1));
+    Vecteur3D t = Rinv.mult(getTranslation());
+    return r.setTranslation(t.multiplier(-1));
   }
 
   /**
    * Raccourci pour un corps rigide (partie linéaire orthonormée) : applique l'inverse
    * de la transformation à un point (monde -> objet) sans calculer l'inverse complet : R^T (p - t).
    */
-  PVector multInversePoint(PVector p) {
-    PVector d = PVector.sub(p, getTranslation());
+  Vecteur3D multInversePoint(Vecteur3D p) {
+    Vecteur3D d = p.soustraire(getTranslation());
     return getMatrix3().transposee().mult(d);
   }
 
-  PVector multInverseDirection(PVector d) {
+  Vecteur3D multInverseDirection(Vecteur3D d) {
     return getMatrix3().transposee().mult(d);
   }
 
@@ -119,6 +119,21 @@ class Matrix4 {
                 m[4], m[5], m[6], m[7],
                 m[8], m[9], m[10], m[11],
                 0, 0, 0, 1);
+  }
+
+  // ---------- Comparaison / affichage (utilisés par les tests) ----------
+  boolean egale(Matrix4 o, float eps) {
+    for (int i = 0; i < 12; i++) if (abs(m[i] - o.m[i]) > eps) return false;
+    return true;
+  }
+
+  String toString() {
+    String s = "";
+    for (int i = 0; i < 3; i++) {
+      s += "| " + nf(m[4 * i], 0, 4) + "  " + nf(m[4 * i + 1], 0, 4) + "  "
+         + nf(m[4 * i + 2], 0, 4) + "  " + nf(m[4 * i + 3], 0, 4) + " |\n";
+    }
+    return s + "| 0.0000  0.0000  0.0000  1.0000 |\n";
   }
 
 }

@@ -27,7 +27,7 @@ class Matrix3 {
   }
 
   // Matrice dont les colonnes sont les vecteurs b1 b2 b3 */
-  Matrix3 setColonnes(PVector b1, PVector b2, PVector b3) {
+  Matrix3 setColonnes(Vecteur3D b1, Vecteur3D b2, Vecteur3D b3) {
     return set(b1.x, b2.x, b3.x,
                b1.y, b2.y, b3.y,
                b1.z, b2.z, b3.z);
@@ -54,7 +54,7 @@ class Matrix3 {
   }
 
   // Matrice antisymétrique [v]x telle que [v]x * u = v x u. */
-  Matrix3 setAntisymetrique(PVector v) {
+  Matrix3 setAntisymetrique(Vecteur3D v) {
     return set(0, -v.z, v.y,
                v.z, 0, -v.x,
                -v.y, v.x, 0);
@@ -62,7 +62,7 @@ class Matrix3 {
 
   // ---------- Tenseurs d'inertie (autour du centre de masse) ----------
   /** Boîte pleine de masse M, de demi-dimensions (a, b, c) : Ixx = M/3 (b² + c²), etc. */
-  Matrix3 setTenseurBoite(float masse, PVector demiDim) {
+  Matrix3 setTenseurBoite(float masse, Vecteur3D demiDim) {
     float a2 = demiDim.x * demiDim.x, b2 = demiDim.y * demiDim.y, c2 = demiDim.z * demiDim.z;
     return set(masse / 3 * (b2 + c2), 0, 0,
                0, masse / 3 * (a2 + c2), 0,
@@ -80,7 +80,7 @@ class Matrix3 {
    *     J' = Jcm + M ( (d.d) I - d d^T )
    * this = Jcm (non modifié).
    */
-  Matrix3 axeParallele(float masse, PVector d) {
+  Matrix3 axeParallele(float masse, Vecteur3D d) {
     float x2 = d.x * d.x, y2 = d.y * d.y, z2 = d.z * d.z;
     Matrix3 delta = new Matrix3(
       y2 + z2, -d.x * d.y, -d.x * d.z,
@@ -126,8 +126,8 @@ class Matrix3 {
   }
 
   // matrice * vecteur
-  PVector mult(PVector v) {
-    return new PVector(
+  Vecteur3D mult(Vecteur3D v) {
+    return new Vecteur3D(
       m[0] * v.x + m[1] * v.y + m[2] * v.z,
       m[3] * v.x + m[4] * v.y + m[5] * v.z,
       m[6] * v.x + m[7] * v.y + m[8] * v.z
@@ -158,6 +158,25 @@ class Matrix3 {
       (m[5] * m[6] - m[3] * m[8]) * inv, (m[0] * m[8] - m[2] * m[6]) * inv, (m[2] * m[3] - m[0] * m[5]) * inv,
       (m[3] * m[7] - m[4] * m[6]) * inv, (m[1] * m[6] - m[0] * m[7]) * inv, (m[0] * m[4] - m[1] * m[3]) * inv
     );
+  }
+
+  // ---------- Comparaison / affichage (utilisés par les tests) ----------
+  // Vrai si M * M^T = I (colonnes orthonormées), à eps près : c'est le cas d'une matrice de rotation
+  boolean estOrthonormale(float eps) {
+    return mult(transposee()).egale(new Matrix3(), eps);
+  }
+
+  boolean egale(Matrix3 o, float eps) {
+    for (int i = 0; i < 9; i++) if (abs(m[i] - o.m[i]) > eps) return false;
+    return true;
+  }
+
+  String toString() {
+    String s = "";
+    for (int i = 0; i < 3; i++) {
+      s += "| " + nf(m[3 * i], 0, 4) + "  " + nf(m[3 * i + 1], 0, 4) + "  " + nf(m[3 * i + 2], 0, 4) + " |\n";
+    }
+    return s;
   }
 
 }
