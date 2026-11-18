@@ -1,13 +1,3 @@
-/**
- * Matrice 3x3, stockée par lignes (row-major) dans m[9] :
- *     | m[0] m[1] m[2] |
- *     | m[3] m[4] m[5] |
- *     | m[6] m[7] m[8] |
- *
- * Sert entre autres de matrice d'orientation R et de tenseur d'inertie J.
- * Les méthodes qui retournent une Matrix3 créent un nouvel objet,
- * sauf celles dont le nom commence par "set" (qui modifient this).
- */
 class Matrix3 {
   float[] m = new float[9];
 
@@ -20,10 +10,6 @@ class Matrix3 {
           float m10, float m11, float m12,
           float m20, float m21, float m22) {
     set(m00, m01, m02, m10, m11, m12, m20, m21, m22);
-  }
-
-  Matrix3(Matrix3 o) {
-    arrayCopy(o.m, m);
   }
 
   // ---------- Initialisation ----------
@@ -40,7 +26,7 @@ class Matrix3 {
     return set(1, 0, 0, 0, 1, 0, 0, 0, 1);
   }
 
-  /** Matrice dont les colonnes sont les vecteurs de la base (b1, b2, b3). */
+  // Matrice dont les colonnes sont les vecteurs b1 b2 b3 */
   Matrix3 setColonnes(PVector b1, PVector b2, PVector b3) {
     return set(b1.x, b2.x, b3.x,
                b1.y, b2.y, b3.y,
@@ -56,11 +42,8 @@ class Matrix3 {
     return this;
   }
 
-  Matrix3 copie() {
-    return new Matrix3(this);
-  }
 
-  /** Matrice de rotation correspondant à un quaternion unitaire. */
+  // Matrice de rotation qui correspond à un quaternion. */
   Matrix3 setOrientation(Quaternion q) {
     float w = q.w, x = q.x, y = q.y, z = q.z;
     return set(
@@ -70,7 +53,7 @@ class Matrix3 {
     );
   }
 
-  /** Matrice antisymétrique [v]x telle que [v]x * u = v x u. */
+  // Matrice antisymétrique [v]x telle que [v]x * u = v x u. */
   Matrix3 setAntisymetrique(PVector v) {
     return set(0, -v.z, v.y,
                v.z, 0, -v.x,
@@ -115,20 +98,21 @@ class Matrix3 {
     return R.mult(this).mult(R.transposee());
   }
 
-  // ---------- Opérations ----------
+  // Matrice + matrice
   Matrix3 add(Matrix3 o) {
     Matrix3 r = new Matrix3();
     for (int i = 0; i < 9; i++) r.m[i] = m[i] + o.m[i];
     return r;
   }
 
+  //Matrice * float
   Matrix3 mult(float s) {
     Matrix3 r = new Matrix3();
     for (int i = 0; i < 9; i++) r.m[i] = m[i] * s;
     return r;
   }
 
-  /** Produit matriciel this * o. */
+  // Produit matriciel
   Matrix3 mult(Matrix3 o) {
     Matrix3 r = new Matrix3();
     for (int i = 0; i < 3; i++) {
@@ -141,7 +125,7 @@ class Matrix3 {
     return r;
   }
 
-  /** Produit matrice-vecteur this * v. */
+  // matrice * vecteur
   PVector mult(PVector v) {
     return new PVector(
       m[0] * v.x + m[1] * v.y + m[2] * v.z,
@@ -150,19 +134,21 @@ class Matrix3 {
     );
   }
 
+  //Calcul de la transposée
   Matrix3 transposee() {
     return new Matrix3(m[0], m[3], m[6],
                        m[1], m[4], m[7],
                        m[2], m[5], m[8]);
   }
 
+  // Calcul du déterminant
   float determinant() {
     return m[0] * (m[4] * m[8] - m[5] * m[7])
          - m[1] * (m[3] * m[8] - m[5] * m[6])
          + m[2] * (m[3] * m[7] - m[4] * m[6]);
   }
 
-  /** Inverse par la méthode des cofacteurs. Lance une exception si la matrice est singulière. */
+  // Calcul de l'inverse de la matrice
   Matrix3 inverse() {
     float det = determinant();
     if (abs(det) < 1e-12f) throw new ArithmeticException("Matrice singulière : inverse impossible");
@@ -174,21 +160,4 @@ class Matrix3 {
     );
   }
 
-  /** Vrai si M * M^T = I (colonnes orthonormées), à eps près. */
-  boolean estOrthonormale(float eps) {
-    return mult(transposee()).egale(new Matrix3(), eps);
-  }
-
-  boolean egale(Matrix3 o, float eps) {
-    for (int i = 0; i < 9; i++) if (abs(m[i] - o.m[i]) > eps) return false;
-    return true;
-  }
-
-  String toString() {
-    String s = "";
-    for (int i = 0; i < 3; i++) {
-      s += "| " + nf(m[3 * i], 0, 4) + "  " + nf(m[3 * i + 1], 0, 4) + "  " + nf(m[3 * i + 2], 0, 4) + " |\n";
-    }
-    return s;
-  }
 }

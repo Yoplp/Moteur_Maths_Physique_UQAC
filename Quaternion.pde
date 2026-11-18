@@ -1,13 +1,3 @@
-/**
- * Quaternion q = [w, (x, y, z)] = w + xi + yj + zk
- *
- * Convention : un quaternion unitaire q représente la rotation
- *     p' = q p q*     (p = quaternion [0, p])
- * avec q = [cos(a/2), sin(a/2) * n] pour une rotation d'angle a autour de l'axe unitaire n.
- *
- * Les méthodes qui retournent un Quaternion créent un nouvel objet (l'objet courant n'est pas modifié),
- * sauf celles dont le nom commence par "set", ainsi que normaliser() et integrer().
- */
 class Quaternion {
   float w = 1, x = 0, y = 0, z = 0;
 
@@ -32,7 +22,7 @@ class Quaternion {
     return set(1, 0, 0, 0);
   }
 
-  /** Rotation d'un angle (radians) autour d'un axe (pas nécessairement unitaire). */
+  // Rotation d'un angle (radians) autour d'un axe (pas nécessairement unitaire). 
   Quaternion setAxeAngle(PVector axe, float angle) {
     float longueur = axe.mag();
     if (longueur < 1e-8f) return setIdentite();
@@ -41,7 +31,7 @@ class Quaternion {
     return set(cos(demi), axe.x * s, axe.y * s, axe.z * s);
   }
 
-  /** Reconstruit le quaternion à partir d'une matrice de rotation 3x3. */
+  // Reconstruit le quaternion à partir d'une matrice de rotation 3x3.
   Quaternion setMatrix3(Matrix3 R) {
     float[] m = R.m;
     float trace = m[0] + m[4] + m[8];
@@ -61,11 +51,6 @@ class Quaternion {
     return normaliser();
   }
 
-  Quaternion copie() {
-    return new Quaternion(this);
-  }
-
-  // ---------- Propriétés ----------
   PVector vecteur() {
     return new PVector(x, y, z);
   }
@@ -78,7 +63,7 @@ class Quaternion {
     return sqrt(normeCarree());
   }
 
-  /** Normalise en place (nécessaire pour qu'il représente une rotation). */
+  // Normalise en place (nécessaire pour qu'il représente une rotation)
   Quaternion normaliser() {
     float n = norme();
     if (n < 1e-12f) return setIdentite();
@@ -92,7 +77,7 @@ class Quaternion {
     return 2 * acos(constrain(w, -1, 1));
   }
 
-  /** Axe de rotation unitaire (arbitraire si la rotation est nulle). */
+  // Axe de rotation unitaire (arbitraire si la rotation est nulle)
   PVector axe() {
     float s = sqrt(max(0, 1 - w * w));
     if (s < 1e-6f) return new PVector(1, 0, 0);
@@ -143,7 +128,7 @@ class Quaternion {
     return w * q.w + x * q.x + y * q.y + z * q.z;
   }
 
-  /** Fait pivoter un vecteur : p' = q p q* (this doit être unitaire). */
+  // Fait pivoter un vecteur : p' = q p q* (this doit être unitaire)
   PVector pivoter(PVector p) {
     PVector v = vecteur();
     PVector t = v.cross(p).mult(2);          // t = 2 (v x p)
@@ -153,12 +138,12 @@ class Quaternion {
     return r;
   }
 
-  /** Déplacement angulaire d tel que this * d = q2, soit d = this^-1 * q2. */
+  // Déplacement angulaire d tel que this * d = q2, soit d = this^-1 * q2
   Quaternion difference(Quaternion q2) {
     return inverse().mult(q2);
   }
 
-  /** Exponentiation q^t : fraction t du déplacement angulaire (q unitaire). */
+  // Exponentiation q^t : fraction t du déplacement angulaire (q unitaire)
   Quaternion pow(float t) {
     float c = constrain(w, -1, 1);
     if (abs(c) > 0.9999f) return new Quaternion();   // rotation (quasi) nulle
